@@ -12,3 +12,7 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 RUN pip install opencv-python
 RUN pip install matplotlib
+RUN pip install distributed
+RUN pip install pandas 
+RUN pip install pyinaturalist 
+

@@ -3,6 +3,8 @@ import pprint
 import os
 import glob
 import requests
+import pandas as pd
+import time
 
 inps = [
     "Abronia elliptica",
@@ -110,48 +112,93 @@ inps = [
     "Boechera perennans",
 ]
 
+def get_pyinaturalist_image_urls():
+    image_ids = []
+    labels = []
 
-for inp in inps:
+    for inp in inps:
 
-    data_directory = "/home/sorozco0612/dev/flora_dex/raw_data/"
+        # get observations for pyinaturalist api
+        observations = get_observations(
+            taxon_name=inp,
+            photos=True,
+            identifications="most agree",
+            page=1,
+            per_page=100,
+        )
 
-    flower_directory = data_directory + inp + "/"
+        print(inp + ": ", len(observations["results"]))
 
-    ## make flower directory if it doesnt exist
-    if not os.path.exists(flower_directory):
-        os.makedirs(flower_directory)
+        ## dont do too many requests at a time
+        time.sleep(1.0)
 
-    ## delete all files in flower directory before adding
-    files = glob.glob(flower_directory + "*")
-    for f in files:
-        os.remove(f)
+        line_count = 0
+        for obs in observations["results"]:
 
-    observations = get_observations(
-        taxon_name=inp,
-        photos=True,
-        identifications="most agree",
-        page=1,
-        per_page=100,
-    )
+            ## get image_id of observation
+            image_id = obs["photos"][0]["url"]
+            image_id = image_id.replace("square", "original")
 
-    print(inp + ": ", len(observations["results"]))
+            print(image_id)
 
-    line_count = 0
-    for obs in observations["results"]:
+            image_ids.append(image_id)
+            labels.append(inp)
 
-        ## get image_id of observation
-        image_id = obs["photos"][0]["url"]
-        image_id = image_id.replace("square", "original")
+        # write image
+        d = {'image-id' : image_ids, 'label' : labels}
+        df = pd.DataFrame(data=d)
+        df.to_csv("inaturalist_csv/image_ids.csv",index=False)
 
-        file_name = flower_directory + "{0}.jpg".format(line_count)
+get_pyinaturalist_image_urls()
 
-        print("Writing {0} to file_name {1}".format(image_id, file_name))
 
-        ## write image url to file
-        f = open(file_name, "wb")
-        f.write(requests.get(image_id).content)
-        f.close()
-
-        line_count += 1
-        # print(row[0])
-        # print(image_id)
+#for inp in inps:
+#
+#    data_directory = "raw_data/"
+#
+#    flower_directory = data_directory + inp + "/"
+#
+#    ## make flower directory if it doesnt exist
+#    if not os.path.exists(flower_directory):
+#        os.makedirs(flower_directory)
+#
+#    ## delete all files in flower directory before adding
+#    files = glob.glob(flower_directory + "*")
+#    for f in files:
+#        os.remove(f)
+#
+#    observations = get_observations(
+#        taxon_name=inp,
+#        photos=True,
+#        identifications="most agree",
+#        page=1,
+#        per_page=100,
+#    )
+#
+#    print(inp + ": ", len(observations["results"]))
+#
+#    line_count = 0
+#    for obs in observations["results"]:
+#
+#        ## get image_id of observation
+#        image_id = obs["photos"][0]["url"]
+#        image_id = image_id.replace("square", "original")
+#
+#        file_name = flower_directory + "{0}.jpg".format(line_count)
+#
+#        print("Writing {0} to file_name {1}".format(image_id, file_name))
+#
+#        ## write image url to file
+#        f = open(file_name, "wb")
+#        f.write(requests.get(image_id).content)
+#        f.close()
+#
+#        image_paths.append(file_name)
+#        labels.append(inp)
+#
+#        line_count += 1
+#    
+## write data paths and labels for ease of use when cleaning
+#d = {'image-path' : image_paths , 'label' : labels}
+#df = pd.DataFrame(data=d)
+#df.to_csv("raw_data/image_paths.csv",index=False)
