@@ -15,4 +15,5 @@ RUN pip install matplotlib
 RUN pip install distributed
 RUN pip install pandas 
 RUN pip install pyinaturalist 
+RUN pip install scipy
 
