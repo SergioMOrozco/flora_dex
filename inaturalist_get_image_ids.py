@@ -56,7 +56,6 @@ inps = [
     "Apocynum androsaemifolium",
     "Apocynum cannabinum",
     "Aquilegia caerulea",
-    "Aquilegia caerulea",
     "Aquilegia chrysantha",
     "Aquilegia elegantula",
     "Arctium minus",
@@ -124,7 +123,7 @@ def get_pyinaturalist_image_urls():
             photos=True,
             identifications="most agree",
             page=1,
-            per_page=100,
+            per_page=200,
         )
 
         print(inp + ": ", len(observations["results"]))
@@ -134,6 +133,10 @@ def get_pyinaturalist_image_urls():
 
         line_count = 0
         for obs in observations["results"]:
+
+            if(len(observations["results"]) < 50):
+                print(inp + " has too few images. skipping...")
+                break
 
             ## get image_id of observation
             image_id = obs["photos"][0]["url"]
