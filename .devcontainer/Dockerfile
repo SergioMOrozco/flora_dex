@@ -14,6 +14,7 @@ RUN pip install opencv-python
 RUN pip install matplotlib
 RUN pip install distributed
 RUN pip install pandas 
+
 RUN pip install pyinaturalist 
 RUN pip install scipy
-
+RUN pip install scikit-learn
