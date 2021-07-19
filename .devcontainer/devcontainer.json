@@ -5,6 +5,6 @@
 		"ms-toolsai.jupyter",
 		"vscodevim.vim",
 		"ms-python.python"
-	]
-
+	],
+	"runArgs": ["--gpus=all"]
 }
