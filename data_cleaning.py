@@ -19,36 +19,47 @@ class ImageManager:
         clean_image_paths = []
         clean_image_labels = []
 
+        # need sample csv for ImageDataGenerator fit
+        sample_image_paths= []
+        sample_image_labels= []
+
         raw_image_paths = [image_path for image_path in chunk['image-path']]
         raw_image_labels = [label for label in chunk['label']]
 
         # got through all the raw image paths and clean them
         for i in range(len(raw_image_paths)):
+            add_to_sample_data = False
             flower_directory = f"clean_data/{raw_image_labels[i]}/"
 
             # create flower directory if it does not exist
             if not os.path.exists(flower_directory):
                 os.makedirs(flower_directory)
+                add_to_sample_data = True
 
             clean_image_path = raw_image_paths[i].replace("raw_data", "clean_data")
-            clean_image_label = raw_image_labels [i]
+            #clean_image_label = raw_image_labels [i]
 
             clean_image_paths.append(clean_image_path)
             clean_image_labels.append(raw_image_labels[i])
 
-            print(f"Cleaning and augmenting {raw_image_paths[i]}")
+            # only add one sample per class
+            if (add_to_sample_data):
+                sample_image_paths.append(clean_image_path)
+                sample_image_labels.append(raw_image_labels[i])
+
+            print(f"Cleaning {raw_image_paths[i]}")
 
             clean_image = ImageManager.clean_image(raw_image_paths[i])
                 
             cv2.imwrite(clean_image_path,clean_image)
 
             # agument images and get their paths,labels
-            augmented_image_paths,augmented_image_labels = ImageManager.augment_image(clean_image_path, clean_image_label, flower_directory)
+            #augmented_image_paths,augmented_image_labels = ImageManager.augment_image(clean_image_path, clean_image_label, flower_directory)
 
-            clean_image_paths += augmented_image_paths
-            clean_image_labels += augmented_image_labels
+            #clean_image_paths += augmented_image_paths
+            #clean_image_labels += augmented_image_labels
             
-        return clean_image_paths, clean_image_labels 
+        return clean_image_paths, clean_image_labels, sample_image_paths,sample_image_labels
     
     def clean_images(self, image_paths_csv):
 
@@ -66,15 +77,26 @@ class ImageManager:
         image_paths =[]
         labels = []
 
-        for i in completed:
-            p,l = i.result()
+        sample_image_paths =[]
+        sample_image_labels = []
 
-            image_paths += p
-            labels += l
+        for i in completed:
+            clean_p,clean_l,sample_p,sample_l = i.result()
+
+            image_paths += clean_p
+            labels += clean_l
+
+            sample_image_paths += sample_p
+            sample_image_labels += sample_l
+
 
         d = {'image-path' : image_paths, 'label' : labels}
         df = pd.DataFrame(data=d)
         df.to_csv("clean_data/image_paths.csv",index=False)
+
+        d = {'image-path' : sample_image_paths, 'label' : sample_image_labels}
+        df = pd.DataFrame(data=d)
+        df.to_csv("clean_data/sample_image_paths.csv",index=False)
 
 
     @staticmethod
@@ -165,16 +187,16 @@ class ImageManager:
     def clean_image(image_path):
         image = cv2.imread(image_path)
 
-        scaled = cv2.resize(image, (500, 500))
+        scaled = cv2.resize(image, (256, 256))
 
-        segment = ImageManager.segment_image(scaled)
+        #segment = ImageManager.segment_image(scaled)
 
         #TODO: scaled pixels using https://machinelearningmastery.com/how-to-normalize-center-and-standardize-images-with-the-imagedatagenerator-in-keras/
         #scaled_pixels = ImageManager.scale_pixels(scaled)
 
         #print (scaled_pixels)
 
-        return segment 
+        return scaled
 
     @staticmethod
     def segment_image(img):
