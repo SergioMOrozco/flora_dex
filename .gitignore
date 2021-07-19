@@ -1,5 +1,6 @@
 raw_data/
 clean_data/
+model/
 h5_files/
 .ipynb_checkpoints/
 __pycache__/
