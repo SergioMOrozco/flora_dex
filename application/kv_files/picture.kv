@@ -1,5 +1,12 @@
 
-<Picture@GridLayout>
+<Picture@FloatLayout>
     cols:1
-    Label:
-        text: "Camera"
+    Camera:
+        size_hint: [1,1]
+        pos_hint:{'x':0, 'y':0} 
+        play: True
+    RoundedButton:
+        size_hint: [.32,.1233]
+        pos_hint:{'x':.34, 'y':.0} 
+        text: "Capture"
+    

@@ -1,0 +1,19 @@
+<Menu>:
+    cols:1
+    padding: 5
+    spacing: 5
+    RoundedButton:
+        pos_hint: {"x": 0.33, "top":1}
+        size_hint: 0.33, 0.15
+        text: "Home"
+        on_release: on_press:root.show_home()
+    RoundedButton:
+        pos_hint: {"x": 0.33, "top":0.8}
+        size_hint: 0.33, 0.15
+        text: "Camera"
+        on_release: on_press:root.show_picture()
+    RoundedButton:
+        pos_hint: {"x": 0.33, "top":0.6}
+        size_hint: 0.33, 0.15
+        text: "Results"
+        on_release: on_press:root.show_results()
