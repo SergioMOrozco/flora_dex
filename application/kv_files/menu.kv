@@ -2,17 +2,25 @@
     cols:1
     padding: 5
     spacing: 5
+
+    home_button: home_button
+    camera_button: camera_button
+    results_button: results_button
+    
     RoundedButton:
+        id: home_button
         pos_hint: {"x": 0.33, "top":1}
         size_hint: 0.33, 0.15
         text: "Home"
         on_release: on_press:root.show_home()
     RoundedButton:
+        id: camera_button
         pos_hint: {"x": 0.33, "top":0.8}
         size_hint: 0.33, 0.15
         text: "Camera"
         on_release: on_press:root.show_picture()
     RoundedButton:
+        id: results_button
         pos_hint: {"x": 0.33, "top":0.6}
         size_hint: 0.33, 0.15
         text: "Results"
