@@ -1,6 +1,7 @@
 <RoundedButton@Button>
     background_normal: ''
     background_color:(0,0,0,0)
+    color:(0,0,0,1)
     canvas.before:
         Color:
             rgba: (0.678, 0.917, 0.603,1)
@@ -8,11 +9,6 @@
             size: self.size
             pos: self.pos
             radius: [10]
-#<main_kv>
-#
-#    #size: root.width -100, root.height -100
-#    #pos: 50,50
-#    cols:1
-#
-#    Label:
-#        text: "Home"
+<main_kv>
+    cols: 1
+    size: root.width, root.height 
