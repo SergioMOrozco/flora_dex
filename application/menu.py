@@ -30,6 +30,6 @@ class Menu(FloatLayout, InteractablePage):
         if (self.current_button.text == "Home"):
             self.show_home()
         elif (self.current_button.text == "Camera"):
-            self.show_home()
+            self.show_picture()
         elif (self.current_button.text == "Results"):
             self.show_results()

@@ -1,43 +1,49 @@
 <Home>
 
+    image_view: image_view
     image_button: image_button
     previous_button: previous_button
     next_button: next_button
+    image_name: image_name
 
-    cols:1
-    GridLayout:
-        cols:2
+    GridLayout
+        cols:1
+        size: root.width-200, root.height-200
+        pos: 100,100
+        GridLayout:
+            cols:2
+            GridLayout:
+                cols:1
+                Image:
+                    pos_hint: {"left":1.0, "top":1.0}
+                    id: image_view
+                    source: 'hello.jpg'
+                    allow_stretch: True
+                RoundedButton:
+                    id:image_button
+                    size_hint: 0.15, 0.15
+                    #pos_hint: {"right":1.0, "top":1.0}
+                    text: "View Images"
+
+            Label:
+                id: image_name
+                pos_hint: {"right":1.0, "top":1.0}
+                text: ""
         GridLayout:
             cols:1
-            Image:
-                pos_hint: {"left":1.0, "top":1.0}
-                id: iamgeView
-                source: 'hello.jpg'
-                allow_stretch: True
-            RoundedButton:
-                id:image_button
-                size_hint: 0.33, 0.15
-                #pos_hint: {"right":1.0, "top":1.0}
-                text: "View Images"
-
-        Label:
-            pos_hint: {"right":1.0, "top":1.0}
-            text: "Flower Name"
-    GridLayout:
-        cols:1
-        Label:
-            size_hint: 1.0, 0.80
-            text: "Description"
-        GridLayout:
-            size_hint: 1.0, 0.20
-            cols:2
-            RoundedButton:
-                id:previous_button
-                size_hint: 0.33, 0.10
-                pos_hint: {"right":1.0}
-                text: "Previous"
-            RoundedButton:
-                id:next_button
-                size_hint: 0.33, 0.10
-                pos_hint: {"left":1.0}
-                text: "Next"
+            Label:
+                size_hint: 1.0, 0.80
+                text: "Description"
+            GridLayout:
+                size_hint: 1.0, 0.20
+                cols:2
+                RoundedButton:
+                    id:previous_button
+                    size_hint: 0.33, 0.10
+                    pos_hint: {"right":1.0}
+                    text: "Previous"
+                RoundedButton:
+                    id:next_button
+                    size_hint: 0.33, 0.10
+                    pos_hint: {"left":1.0}
+                    text: "Next"

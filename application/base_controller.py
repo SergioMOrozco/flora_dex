@@ -18,7 +18,7 @@ class BaseController(GridLayout):
         self.menu.add_menu_callback(self.menu_callback)
 
         self.home = Home()
-        #self.picture= Picture()
+        self.picture= Picture()
         self.results= Results()
 
         self.open_window = self.home
