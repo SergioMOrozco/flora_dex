@@ -14,15 +14,19 @@ class InteractablePage:
         else:
             self.button_index -=1
 
+        print (self.button_index)
+
         self.button_index = self.button_index % len(self.button_list)
         self.current_button = self.button_list[self.button_index]
 
-        if increment:
-            previous_button = self.button_list[(self.button_index -1 + 3) % len(self.button_list)]
-        else:
-            previous_button = self.button_list[(self.button_index + 1 + 3) % len(self.button_list)]
+        if len(self.button_list) > 1:
+            if increment:
+                previous_button = self.button_list[(self.button_index -1 + len(self.button_list)) % len(self.button_list)]
+            else:
+                previous_button = self.button_list[(self.button_index + 1 + len(self.button_list)) % len(self.button_list)]
 
-        previous_button.background_color = (0,0,0,0)
+            previous_button.background_color = (0,0,0,0)
+
         self.current_button.background_color = (1,1,1,1)
         self.current_button.color = (0,0,0,1)
 

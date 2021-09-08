@@ -32,6 +32,9 @@ class BaseController(GridLayout):
         if menu_item == "home":
             self.open_window = self.home
             self.add_widget(self.home)
+        elif menu_item == "picture":
+            self.open_window = self.picture
+            self.add_widget(self.picture)
         elif menu_item == "results":
             self.open_window = self.results
             self.add_widget(self.results)

@@ -1,12 +1,29 @@
 
 <Picture>
-    cols:1
-    Camera:
-        size_hint: [1,1]
-        pos_hint:{'x':0, 'y':0} 
-        play: True
-    RoundedButton:
-        size_hint: [.32,.1233]
-        pos_hint:{'x':.34, 'y':.0} 
-        text: "Capture"
+
+    capture_button: capture_button
+    camera:camera
+    captured_label: captured_label
+
+    GridLayout:
+        cols:1
+        size: root.width-200, root.height-200
+        pos: 100,100
+        Label:
+            size_hint: [0.1,0.1]
+            id: captured_label
+            text: "Captured"
+            opacity: 0
+
+        Camera:
+            id: camera
+            size_hint: [1.0,1.0]
+            pos_hint:{'x':0, 'y':0} 
+            #resolution: (320,240)
+            play: True
+        RoundedButton:
+            id: capture_button
+            size_hint: [.32,.1233]
+            pos_hint:{'x':.34, 'y':.0} 
+            text: "Capture"
     

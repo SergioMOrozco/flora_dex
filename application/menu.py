@@ -9,7 +9,6 @@ class Menu(FloatLayout, InteractablePage):
     results_button = ObjectProperty(None)
 
     def __init__(self,**kwargs):
-
         super(Menu,self).__init__(**kwargs)
 
         self.button_list = [self.home_button,self.camera_button,self.results_button]
