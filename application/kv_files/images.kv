@@ -1,0 +1,27 @@
+<Images>
+    image_view: image_view
+    previous_button: previous_button
+    next_button: next_button
+
+    GridLayout:
+        cols:1
+        #size: root.width-200, root.height-200
+        #pos: 100,100
+        padding: [100,100,100,100]
+        Image:
+            id: image_view
+            size_hint: [1.0,1.0]
+            pos_hint:{'x':0, 'y':0} 
+            source: 'hello.jpg'
+            allow_stretch: True
+
+        GridLayout:
+            size_hint: [.32,.1233]
+            cols: 2
+            RoundedButton:
+                id: previous_button
+                text: "Previous"
+            RoundedButton:
+                id: next_button
+                text: "Next"
+    GridLayout:

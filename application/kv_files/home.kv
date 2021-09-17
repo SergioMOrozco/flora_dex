@@ -1,19 +1,32 @@
-<Home>
+<RoundedButton@Button>
+    background_normal: ''
+    background_color:(0,0,0,0)
+    color:(0,0,0,1)
+    canvas.before:
+        Color:
+            rgba: (0.678, 0.917, 0.603,1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
 
+<Home>:
     image_view: image_view
     image_button: image_button
     previous_button: previous_button
     next_button: next_button
     image_name: image_name
 
-    GridLayout
-        cols:1
-        size: root.width-200, root.height-200
+    GridLayout:
+        size: root.width-200,root.height-200
         pos: 100,100
+        cols:1
         GridLayout:
+            size_hint: 1.0,0.8
             cols:2
             GridLayout:
                 cols:1
+                padding: [0,0,0,5]
                 Image:
                     pos_hint: {"left":1.0, "top":1.0}
                     id: image_view
@@ -22,7 +35,7 @@
                 RoundedButton:
                     id:image_button
                     size_hint: 0.15, 0.15
-                    #pos_hint: {"right":1.0, "top":1.0}
+                    pos_hint: {"right":1.0, "top":1.0}
                     text: "View Images"
 
             Label:
@@ -31,10 +44,11 @@
                 text: ""
                 font_size: 24
         GridLayout:
+            size_hint: 1.0,0.2
             cols:1
-            Label:
-                size_hint: 1.0, 0.80
-                text: "Description"
+            #Label:
+            #    size_hint: 1.0, 0.80
+            #    text: "Description"
             GridLayout:
                 size_hint: 1.0, 0.20
                 cols:2

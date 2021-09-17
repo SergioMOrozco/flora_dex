@@ -7,24 +7,28 @@ from picture import Picture
 from results import Results
 
 class BaseController(GridLayout):
+
     def __init__(self,**kwargs):
         super(BaseController,self).__init__(**kwargs)
 
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
-        self.menu = Menu()
+        self.menu = Menu(self._keyboard)
         self.menuWindow = Popup(title="Menu", content=self.menu, size_hint=(.8,.8))
         self.menu.add_menu_callback(self.menu_callback)
 
-        self.home = Home()
-        self.picture= Picture()
+        self.home = Home(self._keyboard)
+        self.picture= Picture(self._keyboard)
         self.results= Results()
 
         self.open_window = self.home
+        self.prev_window = self.open_window
+        self.open_window.has_focus = True
         self.add_widget(self.home)
 
-        self.ignore_next= False
+        self.ignore_next= True
+        self.menu_open = False
 
     def menu_callback(self,menu_item):
         self.clear_widgets()
@@ -39,6 +43,10 @@ class BaseController(GridLayout):
             self.open_window = self.results
             self.add_widget(self.results)
 
+        # sometimes the user wont close the image modal before hand
+        self.home.image_modal.dismiss()
+        self.open_window.ignore_next = True
+        self.open_window.has_focus = True
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -52,18 +60,26 @@ class BaseController(GridLayout):
             if keycode[1] == 'enter':
                 self.show_menu()
             elif keycode[1] == 'alt':
+                if (self.menu_open):
+                    self.open_window = self.prev_window
+                    self.open_window.has_focus = True
                 self.close_menu()
-            elif (keycode[1] == 'right' or keycode[1] == 'down'):
-                self.open_window.set_button_index(True)
-            elif (keycode[1] == 'left' or keycode[1] == 'up'):
-                self.open_window.set_button_index(False)
-            elif (keycode[1] == 'lctrl'):
-                self.open_window.select()
 
         self.ignore_next = not self.ignore_next
     
     def show_menu(self):
-        self.open_window = self.menu
-        self.menuWindow.open()
+        if (not self.menu_open):
+            self.open_window.has_focus = False
+            self.prev_window = self.open_window
+
+            self.open_window = self.menu
+            self.open_window.has_focus = True
+            self.menuWindow.open()
+            self.menu_open = True
+
     def close_menu(self):
-        self.menuWindow.dismiss()
+        if (self.menu_open):
+            self.open_window.has_focus = False
+
+            self.menuWindow.dismiss()
+            self.menu_open = False

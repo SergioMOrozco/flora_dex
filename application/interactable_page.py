@@ -1,9 +1,10 @@
-
 class InteractablePage:
 
     def __init__(self):
         self.button_list = []
         self.button_index = -1
+        self.has_focus = False
+        self.ignore_next = False
 
     def set_button_index(self,increment):
         if len(self.button_list) == 0:

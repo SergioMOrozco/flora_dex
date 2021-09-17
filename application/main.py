@@ -7,6 +7,9 @@ Builder.load_file("kv_files/home.kv")
 Builder.load_file("kv_files/menu.kv")
 Builder.load_file("kv_files/picture.kv")
 Builder.load_file("kv_files/results.kv")
+Builder.load_file("kv_files/images.kv")
+
+#Window.size = (720,480)
 
 class MainApp(App):
     def build(self):
