@@ -1,10 +1,10 @@
+#!/usr/bin/python3
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from menu import Menu
 from kivy.core.window import Window
 from home import Home
 from picture import Picture
-from results import Results
 
 class BaseController(GridLayout):
 
@@ -20,7 +20,7 @@ class BaseController(GridLayout):
 
         self.home = Home(self._keyboard)
         self.picture= Picture(self._keyboard)
-        self.results= Results()
+        self.picture.add_picture_callback(self.picture_callback)
 
         self.open_window = self.home
         self.prev_window = self.open_window
@@ -35,18 +35,24 @@ class BaseController(GridLayout):
         self.close_menu()
         if menu_item == "home":
             self.open_window = self.home
+            self.home.use_default_classes()
             self.add_widget(self.home)
         elif menu_item == "picture":
             self.open_window = self.picture
             self.add_widget(self.picture)
         elif menu_item == "results":
-            self.open_window = self.results
-            self.add_widget(self.results)
+            self.open_window = self.home
+            self.home.use_result_classes()
+            self.add_widget(self.home)
 
         # sometimes the user wont close the image modal before hand
         self.home.image_modal.dismiss()
         self.open_window.ignore_next = True
         self.open_window.has_focus = True
+    
+    def picture_callback(self,classes,accuracy):
+        self.home.set_results(classes,accuracy)
+
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)

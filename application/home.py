@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import pandas as pd
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.modalview import ModalView 
@@ -13,6 +14,7 @@ class Home(GridLayout,InteractablePage):
     image_button= ObjectProperty(None)
     previous_button = ObjectProperty(None)
     next_button = ObjectProperty(None)
+    accuracy_label = ObjectProperty(None)
 
     def __init__(self,keyboard,**kwargs):
 
@@ -22,11 +24,16 @@ class Home(GridLayout,InteractablePage):
         self._keyboard = keyboard 
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
-        self.df = pd.read_csv("raw_data/image_paths.csv")
+        self.df = pd.read_csv("/home/pi/dev/flora_dex/application/raw_data/image_paths.csv")
 
         ## get all unique labels and sort them (for classification_report)
-        self.classes = list(self.df['label'].unique())
-        self.classes.sort()
+        self.default_classes = list(self.df['label'].unique())
+        self.default_classes.sort()
+
+        self.classes = self.default_classes
+        self.results = []
+
+        self.use_results = False
 
         self.i = 0
 
@@ -34,7 +41,6 @@ class Home(GridLayout,InteractablePage):
 
         self.image = Images(self._keyboard)
         self.image.add_dismiss_callback(self.dismiss_callback)
-        #self.image_window = Popup(content=self.image, size_hint=(0.8,0.8))
         self.image_modal = ModalView()
         self.image_modal.add_widget(self.image)
 
@@ -42,6 +48,30 @@ class Home(GridLayout,InteractablePage):
 
         self.update()
 
+
+    def set_results(self,classes, accuracy):
+        self.results = classes
+        self.results_accuracy = accuracy
+    
+    def use_default_classes(self):
+        self.i = 0
+        self.use_results = False
+        self.classes = self.default_classes
+        self.accuracy_label.opacity = 0
+        self.update()
+    
+    def use_result_classes(self):
+        self.i = 0
+        if (self.results == []):
+            self.use_results = False
+            self.classes = self.default_classes
+            self.accuracy_label.opacity = 0
+        else:
+            self.use_results = True
+            self.classes = self.results
+            self.accuracy_label.opacity = 1
+
+        self.update()
 
     def select(self):
         if (self.current_button.text == "View Images"):
@@ -90,6 +120,9 @@ class Home(GridLayout,InteractablePage):
     
     def update(self):
         self.image_name.text = self.classes[self.i]
+
+        if (self.use_results):
+            self.accuracy_label.text = "Accuracy: " + str(int(self.results_accuracy[self.i] * 100)) + "%"
 
         # get all images of the current class
         self.images = self.df[self.df['label'] == self.classes[self.i]].values.tolist()

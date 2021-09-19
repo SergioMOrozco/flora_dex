@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty 
 from interactable_page import InteractablePage

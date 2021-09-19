@@ -1,13 +1,13 @@
+#!/usr/bin/python3
 from kivy.app import App
 from kivy.lang import Builder
 from base_controller import BaseController
 
-Builder.load_file("kv_files/base.kv")
-Builder.load_file("kv_files/home.kv")
-Builder.load_file("kv_files/menu.kv")
-Builder.load_file("kv_files/picture.kv")
-Builder.load_file("kv_files/results.kv")
-Builder.load_file("kv_files/images.kv")
+Builder.load_file("/home/pi/dev/flora_dex/application/kv_files/base.kv")
+Builder.load_file("/home/pi/dev/flora_dex/application/kv_files/home.kv")
+Builder.load_file("/home/pi/dev/flora_dex/application/kv_files/menu.kv")
+Builder.load_file("/home/pi/dev/flora_dex/application/kv_files/picture.kv")
+Builder.load_file("/home/pi/dev/flora_dex/application/kv_files/images.kv")
 
 #Window.size = (720,480)
 

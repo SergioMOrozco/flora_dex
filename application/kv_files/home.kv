@@ -16,6 +16,7 @@
     previous_button: previous_button
     next_button: next_button
     image_name: image_name
+    accuracy_label : accuracy_label
 
     GridLayout:
         size: root.width-200,root.height-200
@@ -37,12 +38,19 @@
                     size_hint: 0.15, 0.15
                     pos_hint: {"right":1.0, "top":1.0}
                     text: "View Images"
-
-            Label:
-                id: image_name
-                pos_hint: {"right":1.0, "top":1.0}
-                text: ""
-                font_size: 24
+            GridLayout:
+                cols: 1
+                Label:
+                    id: image_name
+                    size_hint: [1.0,0.6]
+                    text: ""
+                    font_size: 24
+                Label:
+                    id: accuracy_label 
+                    opacity: 0
+                    size_hint: [1.0,0.4]
+                    text: "Accuracy : "
+                    font_size: 16
         GridLayout:
             size_hint: 1.0,0.2
             cols:1

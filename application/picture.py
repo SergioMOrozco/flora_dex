@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import pandas as pd
 from kivy.uix.gridlayout import GridLayout
 from kivy.properties import ObjectProperty 
@@ -6,6 +7,7 @@ from threading import Timer
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from PIL import Image
 import numpy as np
+from threading import Thread
 
 import numpy as np
 import tflite_runtime.interpreter as tflite
@@ -24,7 +26,7 @@ class Picture(GridLayout,InteractablePage):
         self._keyboard = keyboard 
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
-        self.df = pd.read_csv("raw_data/image_paths.csv")
+        self.df = pd.read_csv("/home/pi/dev/flora_dex/application/raw_data/image_paths.csv")
 
         ## get all unique labels and sort them (for classification_report)
         self.classes = list(self.df['label'].unique())
@@ -55,37 +57,45 @@ class Picture(GridLayout,InteractablePage):
 
         self.ignore_next = not self.ignore_next
 
-    def add_menu_callback(self,menu_callback):
-        self.menu_callback = menu_callback
+    def add_picture_callback(self,picture_callback):
+        self.picture_callback = picture_callback
 
     def process_capture(self):
-        camera = self.ids['camera']
-        camera.export_to_png("capture.png")
 
-        rgba = Image.open('/home/pi/dev/flora_dex/application/clean_data/Abronia fragrans/0e3f570e-ca32-4f62-9a18-1396736da588.jpg')
+
+        camera = self.ids['camera']
+        camera.export_to_png("/home/pi/dev/flora_dex/application/capture.png")
+
+
+        t = Thread(target=self.capture_thread)
+        t.start() 
+        t.join() 
+
+        self.captured_label.opacity = 1.0
+        timer = Timer(3.0, self.captured_timer)
+        timer.start()
+
+    def captured_timer(self):
+        self.captured_label.opacity = 0.0
+
+    def capture_thread(self):
+
+        rgba = Image.open('/home/pi/dev/flora_dex/application/capture.png')
         rgba.load() # required for png.split()
 
         # need to get rid of alpha channel
-        #image = Image.new("RGB", rgba.size, (255, 255, 255))
-        #image.paste(rgba, mask=rgba.split()[3]) # 3 is the alpha channel
+        image = Image.new("RGB", rgba.size, (255, 255, 255))
+        image.paste(rgba, mask=rgba.split()[3]) # 3 is the alpha channel
 
-        #image = image.resize((256,256))
-        #print(image.size)
-        #print(image.mode)
+        image = image.resize((256,256))
 
-        image = np.asarray(rgba,dtype=np.float32)
+        image = np.asarray(image,dtype=np.float32)
         image = image.reshape(1, 256, 256, 3)
-        print (image.shape)
 
-        self.captured_label.opacity = 1.0
-
-        t = Timer(3.0, self.captured_timer)
-        t.start() 
-
-        #blank = np.zeros((self.input_details[0]['shape']),dtype=np.float32)
+        # post process image
         self.data_gen.standardize(image)
 
-
+        # run inference
         self.interpreter.set_tensor(self.input_details[0]['index'], image)
         self.interpreter.invoke()
         prediction = self.interpreter.get_tensor(self.output_details[0]['index'])
@@ -95,11 +105,7 @@ class Picture(GridLayout,InteractablePage):
         max_five_classes = [self.classes[i] for i in max_five]
         print(max_five_classes)
 
-    def captured_timer(self):
-        self.captured_label.opacity = 0.0
-
-        #TODO: Clean Image
-        #self.menu_callback("home")
+        self.picture_callback(max_five_classes,[prediction[i] for i in max_five])
 
     def select(self):
         if (self.current_button.text == "Capture"):
