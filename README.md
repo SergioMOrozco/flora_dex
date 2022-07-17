@@ -1,6 +1,9 @@
 # Flora Dex
 ## Description
 - This project is aimed at classifying a number of wildflowers native to Colorado.
+## Prerequisites
+- docker
+- docker-compose >= 1.28
 ### Model Description
 - Resnet50
   - Input Layer: 256,256,3
