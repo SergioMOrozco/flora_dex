@@ -1,14 +1,12 @@
-FROM jupyter/minimal-notebook
+FROM tensorflow/tensorflow:2.5.0-gpu-jupyter
 
-#need root access to run apt-get commands
-USER root
+# https://github.com/NVIDIA/nvidia-docker/issues/1632 workaround for inability to update apt-get
+RUN rm /etc/apt/sources.list.d/cuda.list
+RUN rm /etc/apt/sources.list.d/nvidia-ml.list
 
 # need libGL.so.1 for cv2
 RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  -y
-
-# user configured for jupyter/minimal-notebook
-USER jovyan
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt

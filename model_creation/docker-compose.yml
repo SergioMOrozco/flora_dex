@@ -31,8 +31,15 @@ services:
         stdin_open: true #docker run -i
         tty: true # docker run -t
         network_mode: "host" 
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia
+                  count: 1
+                  capabilities: [gpu]
         volumes:
             - type: bind
               source: ./
-              target: /home/jovyan/work
+              target: /tf/notebooks/
               
