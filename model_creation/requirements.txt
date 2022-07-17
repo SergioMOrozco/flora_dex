@@ -1,0 +1,6 @@
+h5py
+tensorflow-gpu
+pandas
+sklearn
+opencv-python
+pillow

@@ -1,0 +1,38 @@
+version: "3.2"
+
+services:
+    data_capture:
+        build:
+          context: . #build will happen in same directory as docker-compose.yml
+          dockerfile: ./docker/data_capture/Dockerfile
+        image: feztheimmigrant/flora_dex_data_capture
+        stdin_open: true #docker run -i
+        tty: true # docker run -t
+        volumes:
+            - type: bind
+              source: ./
+              target: /app/
+    data_cleaning:
+        build:
+          context: . #build will happen in same directory as docker-compose.yml
+          dockerfile: ./docker/data_cleaning/Dockerfile
+        image: feztheimmigrant/flora_dex_data_cleaning
+        stdin_open: true #docker run -i
+        tty: true # docker run -t
+        volumes:
+            - type: bind
+              source: ./
+              target: /app/
+    model_creation:
+        build:
+          context: . #build will happen in same directory as docker-compose.yml
+          dockerfile: ./docker/model_creation/Dockerfile
+        image: feztheimmigrant/flora_dex_model_creation
+        stdin_open: true #docker run -i
+        tty: true # docker run -t
+        network_mode: "host" 
+        volumes:
+            - type: bind
+              source: ./
+              target: /home/jovyan/work
+              
