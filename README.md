@@ -4,6 +4,7 @@
 ## Prerequisites
 - docker
 - docker-compose >= 1.28
+- nvidia-container-runtime
 ### Model Description
 - Resnet50
   - Input Layer: 256,256,3
