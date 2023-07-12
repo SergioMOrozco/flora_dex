@@ -1,6 +1,17 @@
 version: "3.2"
 
 services:
+    test:
+        build:
+          context: . #build will happen in same directory as docker-compose.yml
+          dockerfile: ./docker/test/Dockerfile
+        image: feztheimmigrant/flora_dex_test
+        stdin_open: true #docker run -i
+        tty: true # docker run -t
+        volumes:
+            - type: bind
+              source: ./
+              target: /app/
     data_capture:
         build:
           context: . #build will happen in same directory as docker-compose.yml

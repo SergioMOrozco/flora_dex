@@ -37,23 +37,25 @@ class ImageManager:
                 add_to_sample_data = True
 
             clean_image_path = raw_image_paths[i].replace("raw_data", "clean_data")
-            #clean_image_label = raw_image_labels [i]
 
-            clean_image_paths.append("data_cleaning/" + clean_image_path)
-            clean_image_labels.append(raw_image_labels[i])
-
-            # only add one sample per class
-            if (add_to_sample_data):
-                sample_image_paths.append(clean_image_path)
-                sample_image_labels.append(raw_image_labels[i])
-                
             raw_image_path = "../data_capture/" + raw_image_paths[i]
 
             print(f"Cleaning {raw_image_path}")
 
             clean_image = ImageManager.clean_image(raw_image_path)
+            
+            if not clean_image is None:
+            
+                clean_image_paths.append("data_cleaning/" + clean_image_path)
+                clean_image_labels.append(raw_image_labels[i])
+
+                # only add one sample per class
+                if (add_to_sample_data):
+                    sample_image_paths.append(clean_image_path)
+                    sample_image_labels.append(raw_image_labels[i])
+            
                 
-            cv2.imwrite(clean_image_path,clean_image)
+                cv2.imwrite(clean_image_path,clean_image)
 
             # agument images and get their paths,labels
             #augmented_image_paths,augmented_image_labels = ImageManager.augment_image(clean_image_path, clean_image_label, flower_directory)
@@ -72,6 +74,7 @@ class ImageManager:
 
         for chunk in pd.read_csv(image_paths_csv, chunksize= 500):
             future= client.submit(self.clean_chunk, chunk, key=str(uuid.uuid4()))
+            #future = self.clean_chunk(chunk)
             futures.append(future)
 
         completed = as_completed(futures)
@@ -188,6 +191,9 @@ class ImageManager:
     @staticmethod
     def clean_image(image_path):
         image = cv2.imread(image_path)
+        
+        if image is None:
+        	return None
 
         scaled = cv2.resize(image, (256, 256))
 
